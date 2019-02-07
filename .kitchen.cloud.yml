@@ -1,0 +1,35 @@
+---
+driver:
+  name: ec2
+  aws_ssh_key_id: DevOpsStudents
+  region: eu-west-1
+  require_chef_omnibus: true
+  instance_type: t2.micro
+  # subnet_id: subnet-02fe41d46b7a35397
+  subnet_id: subnet-0e9b6138ff1ce18f2
+
+  # security_group_ids: ["sg-0d0efe5e2266474e5"]
+  associate_public_ip: true
+
+provisioner:
+  name: chef_solo
+
+# transport:
+#   ssh_key: ~/.ssh/DevOpsStudents.pem
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: ubuntu-16.04
+    driver:
+      box: ubuntu/xenial64
+
+suites:
+  - name: default
+    run_list:
+      - recipe[node::default]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:
